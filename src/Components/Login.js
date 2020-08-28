@@ -5,7 +5,7 @@ import { auth, provider } from "../firebase.js";
 import { useStateValue } from "../StateProvider";
 import { actionTypes } from "../reducer";
 function Login() {
-  const [{}, dispatch] = useStateValue();
+  const [, dispatch] = useStateValue();
   const signin = () => {
     auth
       .signInWithPopup(provider)

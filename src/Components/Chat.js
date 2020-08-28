@@ -13,7 +13,7 @@ function Chat() {
   const [input, setinput] = useState("");
   const { roomId } = useParams();
   const [roomName, setroomName] = useState("");
-  console.log(roomId);
+  const [messages, setmessages] = useState([]);
   useEffect(() => {
     if (roomId) {
       db.collection("Rooms")
@@ -21,9 +21,17 @@ function Chat() {
         .onSnapshot((snapshot) => {
           setroomName(snapshot.data().name);
         });
+
+      db.collection("Rooms")
+        .doc(roomId)
+        .collection("messages")
+        .orderBy("timestamp", "asc")
+        .onSnapshot((snapshot) =>
+          setmessages(snapshot.docs.map((doc) => doc.data()))
+        );
     }
   }, [roomId]);
-  console.log(roomName);
+  console.log(messages);
   useEffect(() => {
     setseed(Math.floor(Math.random() * 5000));
   }, [roomId]);
@@ -55,11 +63,15 @@ function Chat() {
         </div>
       </div>
       <div className="chat__header__body">
-        <p className={`chat__message ${true && "chat__reciever"}`}>
-          <span className="chat__name">Muhammad Zulqarnain</span>chat Message
-          <span className="chat__timestamp"> 3:42pm </span>
-        </p>
-        <p className="chat__message white">chat Message</p>
+        {messages.map((message) => (
+          <p className={`chat__message ${true && "chat__reciever"}`}>
+            <span className="chat__name">{message.Name}</span>
+            {message.message}
+            <span className="chat__timestamp">
+              {new Date(message.timestamp?.toDate()).toUTCString()}
+            </span>
+          </p>
+        ))}
       </div>
       <div className="chat__header__footer">
         <InsertEmoticonIcon />
