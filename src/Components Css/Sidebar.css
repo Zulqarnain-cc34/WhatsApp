@@ -45,6 +45,11 @@
     background-color: white;
 }
 
+.sidebar__chat a {
+    text-decoration: none;
+    color: black;
+}
+
 .sidebar__searchContainer>input {
     outline-style: none;
     margin-left: 10px;
